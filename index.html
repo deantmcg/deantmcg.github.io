@@ -34,31 +34,5 @@
 				</footer>
 			</div>
 		</div>
-
-		<!-- JavaScript to handle email copy and show notification -->
-		<script>
-			window.onload = function() { document.body.classList.remove('is-preload'); }
-			window.ontouchmove = function() { return false; }
-			window.onorientationchange = function() { document.body.scrollTop = 0; }
-			
-			function copyEmail(evt) {
-				evt.preventDefault();
-
-				// Copy the email to clipboard
-				const email = 'deantmcg@gmail.com';
-				navigator.clipboard.writeText(email).then(() => {
-				  // Show the "Copied!" message
-				  const copyMessage = document.getElementById('copyMessage');
-				  copyMessage.classList.add('show');
-				  
-				  // Hide the message after 2 seconds
-				  setTimeout(() => {
-					copyMessage.classList.remove('show');
-				  }, 2000);
-				}).catch(() => {
-				  console.log("Failed to copy the email to clipboard");
-				});
-			}
-		</script>
 	</body>
 </html>
