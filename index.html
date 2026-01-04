@@ -37,8 +37,8 @@
 						<li><a href="https://github.com/deantmcg" target="_blank" class="icon brands"
 								aria-label="GitHub"><i class="fab fa-github"></i><span class="label">Github</span></a>
 						</li>
-						<li><a href="#" id="email-link" class="icon"
-								aria-label="Email"><i class="fas fa-envelope"></i><span class="label">Email</span></a>
+						<li><a href="#" id="contact-button" class="icon"
+								aria-label="Contact"><i class="fas fa-envelope"></i><span class="label">Contact</span></a>
 						</li>
 					</ul>
 				</nav>
@@ -185,13 +185,47 @@
 		</footer>
 	</div>
 
+	<!-- Contact Form Modal -->
+	<div id="contact-modal" class="modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2>Get In Touch</h2>
+				<button class="modal-close" aria-label="Close modal">&times;</button>
+			</div>
+			<form id="contact-form" class="contact-form">
+				<div class="form-group">
+					<label for="name">Name</label>
+					<input type="text" id="name" name="name" required placeholder="Your name">
+				</div>
+				<div class="form-group">
+					<label for="email">Email</label>
+					<input type="email" id="email" name="email" required placeholder="your.email@example.com">
+				</div>
+				<div class="form-group">
+					<label for="message">Message</label>
+					<textarea id="message" name="message" required placeholder="Your message..." rows="5"></textarea>
+				</div>
+				<input type="hidden" name="access_key" id="access_key">
+				<div class="form-status" id="form-status"></div>
+				<button type="submit" class="btn-submit">
+					<span class="btn-text">Send Message</span>
+					<span class="btn-loading" style="display: none;">Sending...</span>
+				</button>
+			</form>
+		</div>
+	</div>
+
 	<script>
 		window.onload = function () {
 			document.body.classList.remove('is-preload');
+			
+			// Set access key for Web3Forms (obfuscated)
+			const parts = ['2d41f4', 'f0-7', '7be-4', '2e4-', 'a8a4-', '1c43', '17fc8', '2d4'];
+			document.getElementById('access_key').value = parts.join('');
 		}
 
 		// Smooth scroll for anchor links
-		document.querySelectorAll('a[href^="#"]:not(#email-link)').forEach(anchor => {
+		document.querySelectorAll('a[href^="#"]:not(#contact-button)').forEach(anchor => {
 			anchor.addEventListener('click', function (e) {
 				e.preventDefault();
 				const target = document.querySelector(this.getAttribute('href'));
@@ -204,14 +238,90 @@
 			});
 		});
 
-		// Email obfuscation - construct email dynamically to prevent scraping
-		document.getElementById('email-link').addEventListener('click', function(e) {
+		// Contact Modal functionality
+		const modal = document.getElementById('contact-modal');
+		const contactBtn = document.getElementById('contact-button');
+		const closeBtn = document.querySelector('.modal-close');
+		const form = document.getElementById('contact-form');
+		const formStatus = document.getElementById('form-status');
+
+		// Open modal
+		contactBtn.addEventListener('click', function(e) {
 			e.preventDefault();
-			// Email parts stored separately and assembled on click
-			const user = 'deantmcg';
-			const domain = 'gmail';
-			const tld = 'com';
-			window.location.href = 'mailto:' + user + '@' + domain + '.' + tld;
+			modal.style.display = 'flex';
+			document.body.style.overflow = 'hidden';
+		});
+
+		// Close modal
+		function closeModal() {
+			modal.style.display = 'none';
+			document.body.style.overflow = '';
+			formStatus.textContent = '';
+			formStatus.className = 'form-status';
+		}
+
+		closeBtn.addEventListener('click', closeModal);
+
+		// Close on outside click
+		modal.addEventListener('click', function(e) {
+			if (e.target === modal) {
+				closeModal();
+			}
+		});
+
+		// Close on Escape key
+		document.addEventListener('keydown', function(e) {
+			if (e.key === 'Escape' && modal.style.display === 'flex') {
+				closeModal();
+			}
+		});
+
+		// Handle form submission
+		form.addEventListener('submit', async function(e) {
+			e.preventDefault();
+			
+			const submitBtn = form.querySelector('.btn-submit');
+			const btnText = submitBtn.querySelector('.btn-text');
+			const btnLoading = submitBtn.querySelector('.btn-loading');
+			
+			// Show loading state
+			btnText.style.display = 'none';
+			btnLoading.style.display = 'inline';
+			submitBtn.disabled = true;
+			formStatus.textContent = '';
+			formStatus.className = 'form-status';
+
+			const formData = new FormData(form);
+			const data = Object.fromEntries(formData);
+
+			try {
+				const response = await fetch('https://api.web3forms.com/submit', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'Accept': 'application/json'
+					},
+					body: JSON.stringify(data)
+				});
+
+				const result = await response.json();
+
+				if (result.success) {
+					formStatus.textContent = 'Message sent successfully! I\'ll get back to you soon.';
+					formStatus.className = 'form-status success';
+					form.reset();
+					setTimeout(closeModal, 3000);
+				} else {
+					throw new Error('Form submission failed');
+				}
+			} catch (error) {
+				formStatus.textContent = 'Failed to send message. Please try again.';
+				formStatus.className = 'form-status error';
+			} finally {
+				btnText.style.display = 'inline';
+				btnLoading.style.display = 'none';
+				submitBtn.disabled = false;
+			}
 		});
 	</script>
 </body>
