@@ -37,6 +37,9 @@
 						<li><a href="https://github.com/deantmcg" target="_blank" class="icon brands"
 								aria-label="GitHub"><i class="fab fa-github"></i><span class="label">Github</span></a>
 						</li>
+						<li><a href="#" id="email-link" class="icon"
+								aria-label="Email"><i class="fas fa-envelope"></i><span class="label">Email</span></a>
+						</li>
 					</ul>
 				</nav>
 
@@ -188,7 +191,7 @@
 		}
 
 		// Smooth scroll for anchor links
-		document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+		document.querySelectorAll('a[href^="#"]:not(#email-link)').forEach(anchor => {
 			anchor.addEventListener('click', function (e) {
 				e.preventDefault();
 				const target = document.querySelector(this.getAttribute('href'));
@@ -199,6 +202,16 @@
 					});
 				}
 			});
+		});
+
+		// Email obfuscation - construct email dynamically to prevent scraping
+		document.getElementById('email-link').addEventListener('click', function(e) {
+			e.preventDefault();
+			// Email parts stored separately and assembled on click
+			const user = 'deantmcg';
+			const domain = 'gmail';
+			const tld = 'com';
+			window.location.href = 'mailto:' + user + '@' + domain + '.' + tld;
 		});
 	</script>
 </body>
