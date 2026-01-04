@@ -219,9 +219,23 @@
 		window.onload = function () {
 			document.body.classList.remove('is-preload');
 			
-			// Set access key for Web3Forms (obfuscated)
-			const parts = ['2d41f4', 'f0-7', '7be-4', '2e4-', 'a8a4-', '1c43', '17fc8', '2d4'];
-			document.getElementById('access_key').value = parts.join('');
+			// SETUP INSTRUCTIONS:
+			// 1. Go to https://web3forms.com and sign up for free
+			// 2. Verify your email address
+			// 3. Copy your Access Key from the dashboard
+			// 4. Split the key into parts below (e.g., if key is "12345678-1234-1234-1234-123456789abc")
+			//    const parts = ['12345678', '-1234-', '1234-', '1234-', '123456789abc'];
+			// 5. In the Web3Forms dashboard, set your email to: deantmcg@gmail.com
+			
+			const parts = ['xxxxxxxx', '-xxxx-', 'xxxx-', 'xxxx-', 'xxxxxxxxxxxx'];
+			const key = parts.join('');
+			
+			// Check if key has been configured (not the default placeholder)
+			if (key.includes('xxxx')) {
+				document.getElementById('access_key').value = '';
+			} else {
+				document.getElementById('access_key').value = key;
+			}
 		}
 
 		// Smooth scroll for anchor links
@@ -284,6 +298,14 @@
 			const btnText = submitBtn.querySelector('.btn-text');
 			const btnLoading = submitBtn.querySelector('.btn-loading');
 			
+			// Check if access key is configured
+			const accessKey = document.getElementById('access_key').value;
+			if (!accessKey || accessKey === '') {
+				formStatus.textContent = 'Contact form setup incomplete. Please email deantmcg@gmail.com directly.';
+				formStatus.className = 'form-status error';
+				return;
+			}
+			
 			// Show loading state
 			btnText.style.display = 'none';
 			btnLoading.style.display = 'inline';
@@ -312,10 +334,11 @@
 					form.reset();
 					setTimeout(closeModal, 3000);
 				} else {
-					throw new Error('Form submission failed');
+					throw new Error(result.message || 'Form submission failed');
 				}
 			} catch (error) {
-				formStatus.textContent = 'Failed to send message. Please try again.';
+				console.error('Form submission error:', error);
+				formStatus.textContent = 'Failed to send message. Please try emailing deantmcg@gmail.com directly.';
 				formStatus.className = 'form-status error';
 			} finally {
 				btnText.style.display = 'inline';
