@@ -37,8 +37,8 @@
 						<li><a href="https://github.com/deantmcg" target="_blank" class="icon brands"
 								aria-label="GitHub"><i class="fab fa-github"></i><span class="label">Github</span></a>
 						</li>
-						<li><a href="#" id="contact-button" class="icon"
-								aria-label="Contact"><i class="fas fa-envelope"></i><span class="label">Contact</span></a>
+						<li><a href="#" id="contact-button" class="icon" aria-label="Contact"><i
+									class="fas fa-envelope"></i><span class="label">Contact</span></a>
 						</li>
 					</ul>
 				</nav>
@@ -218,24 +218,9 @@
 	<script>
 		window.onload = function () {
 			document.body.classList.remove('is-preload');
-			
-			// SETUP INSTRUCTIONS:
-			// 1. Go to https://web3forms.com and sign up for free
-			// 2. Verify your email address
-			// 3. Copy your Access Key from the dashboard
-			// 4. Split the key into parts below (e.g., if key is "12345678-1234-1234-1234-123456789abc")
-			//    const parts = ['12345678', '-1234-', '1234-', '1234-', '123456789abc'];
-			// 5. In the Web3Forms dashboard, set your email to: deantmcg@gmail.com
-			
-			const parts = ['xxxxxxxx', '-xxxx-', 'xxxx-', 'xxxx-', 'xxxxxxxxxxxx'];
+			const parts = ['66e5a1a9', '-8070-', '42bf-', 'b6a6-', 'a6d07d3090b9'];
 			const key = parts.join('');
-			
-			// Check if key has been configured (not the default placeholder)
-			if (key.includes('xxxx')) {
-				document.getElementById('access_key').value = '';
-			} else {
-				document.getElementById('access_key').value = key;
-			}
+			document.getElementById('access_key').value = key;
 		}
 
 		// Smooth scroll for anchor links
@@ -260,7 +245,7 @@
 		const formStatus = document.getElementById('form-status');
 
 		// Open modal
-		contactBtn.addEventListener('click', function(e) {
+		contactBtn.addEventListener('click', function (e) {
 			e.preventDefault();
 			modal.style.display = 'flex';
 			document.body.style.overflow = 'hidden';
@@ -277,27 +262,27 @@
 		closeBtn.addEventListener('click', closeModal);
 
 		// Close on outside click
-		modal.addEventListener('click', function(e) {
+		modal.addEventListener('click', function (e) {
 			if (e.target === modal) {
 				closeModal();
 			}
 		});
 
 		// Close on Escape key
-		document.addEventListener('keydown', function(e) {
+		document.addEventListener('keydown', function (e) {
 			if (e.key === 'Escape' && modal.style.display === 'flex') {
 				closeModal();
 			}
 		});
 
 		// Handle form submission
-		form.addEventListener('submit', async function(e) {
+		form.addEventListener('submit', async function (e) {
 			e.preventDefault();
-			
+
 			const submitBtn = form.querySelector('.btn-submit');
 			const btnText = submitBtn.querySelector('.btn-text');
 			const btnLoading = submitBtn.querySelector('.btn-loading');
-			
+
 			// Check if access key is configured
 			const accessKey = document.getElementById('access_key').value;
 			if (!accessKey || accessKey === '') {
@@ -305,7 +290,7 @@
 				formStatus.className = 'form-status error';
 				return;
 			}
-			
+
 			// Show loading state
 			btnText.style.display = 'none';
 			btnLoading.style.display = 'inline';
